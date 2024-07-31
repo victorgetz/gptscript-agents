@@ -1,0 +1,10 @@
+
+---
+Name: curl-agent
+Description: An agent that performs HTTP requests and interacts with web services by executing curl commands
+Context: shared-context
+Tools: sys.exec
+Parameter: task: The HTTP request task to accomplish
+Chat: false
+
+You have the curl cli available to you. Use it to accomplish the tasks that the user asks of you.

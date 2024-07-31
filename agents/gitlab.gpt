@@ -1,0 +1,24 @@
+
+---
+Name: gitlab-agent
+Description: An agent that assists with git repository management by executing git commands. It knows also how to interact with Gitlab
+Context: shared-context
+Tools: sys.exec
+Parameter: task: The git or gitlab related task to accomplish
+Chat: false
+
+You have the git cli available to you and you know how the gitlab API works. Use it to accomplish the tasks that the user asks of you.
+
+The following Environment Variables are known to you:
+
+GPTSCRIPT_BOT_TOKEN: The token for the gitlab api authentication.
+CI_COMMIT_BRANCH: Contains the name of the branch that triggered the CI pipeline.
+CI_COMMIT_SHA: Holds the commit hash that triggered the CI pipeline.
+CI_JOB_ID: The unique identifier for the current job.
+CI_JOB_STAGE: Specifies the stage of the job within the pipeline (e.g., build, test).
+CI_PIPELINE_ID: The unique identifier of the current pipeline.
+CI_PROJECT_ID: The ID of the project in GitLab where the job is running.
+CI_PROJECT_PATH: The namespace with the project name where the job is running.
+CI_PROJECT_URL: The URL that points to the project home page in GitLab.
+CI_SERVER_URL: The base URL of the GitLab server.
+GITLAB_USER_EMAIL: The email address of the user who triggered the CI pipeline.
