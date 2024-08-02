@@ -1,0 +1,76 @@
+{{- range $jobName, $job := .Values.jobs }}
+{{- if $job.createCronJob }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $jobName }}
+spec:
+  schedule: "{{ $job.schedule }}"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "gptscript-bot.fullname" $ }}
+          containers:
+            - name: {{ $jobName }}
+              image: {{ $job.image }}
+              env:
+                - name: COMMANDS_JSON
+                  value: '{{$job.commands | toJson}}'
+              envFrom:
+                - secretRef:
+                    name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
+              volumeMounts:
+                - name: commands
+                  mountPath: /config
+                  subPath: commands.json
+                - name: script
+                  mountPath: /scripts/run_gptscript.sh
+                  subPath: run_gptscript.sh
+              command: ["/bin/sh", "/scripts/run_gptscript.sh"]
+          volumes:
+            - name: commands
+              secret:
+                secretName: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
+            - name: script
+              configMap:
+                name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
+          restartPolicy: Never
+---
+{{- else }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $jobName }}
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ include "gptscript-bot.fullname" $ }}
+      containers:
+        - name: {{ $jobName }}
+          image: {{ $job.image }}
+          env:
+            - name: COMMANDS_JSON
+              value: '{{$job.commands | toJson}}'
+          envFrom:
+            - secretRef:
+                name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
+          volumeMounts:
+            - name: commands
+              mountPath: /config
+              subPath: commands.json
+            - name: script
+              mountPath: /scripts/run_gptscript.sh
+              subPath: run_gptscript.sh
+          command: ["/bin/sh", "/scripts/run_gptscript.sh"]
+      volumes:
+        - name: commands
+          secret:
+            secretName: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
+        - name: script
+          configMap:
+            name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
+      restartPolicy: Never
+---
+{{- end }}
+{{- end }}

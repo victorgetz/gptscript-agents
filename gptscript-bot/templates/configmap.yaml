@@ -1,0 +1,9 @@
+{{- range $jobName, $job := .Values.jobs }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
+data:
+  run_gptscript.sh: | {{ ( $.Files.Get "files/run_gptscript.sh") | nindent 4 }}
+---
+{{- end }}

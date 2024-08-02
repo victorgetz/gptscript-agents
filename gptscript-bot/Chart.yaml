@@ -1,0 +1,6 @@
+apiVersion: v2
+name: gptscript-bot
+description: A Helm chart to create multiple Jobs or CronJobs to run gptscript commands
+type: application
+version: 0.1.0
+appVersion: "1.0"

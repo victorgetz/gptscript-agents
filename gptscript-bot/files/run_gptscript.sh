@@ -60,6 +60,13 @@ process_commands() {
     done
 }
 
+apk add --no-cache git libgcc curl jq ruby
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+mkdir -p /usr/local/bin
+mv kubectl /usr/local/bin/
+
 configure_git
 
 #Workdir
