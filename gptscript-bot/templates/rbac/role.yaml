@@ -1,14 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   name: {{ include "gptscript-bot.fullname" . }}
 rules:
-  - apiGroups: [""]
-    resources: ["pods", "pods/log", "services", "endpoints", "persistentvolumeclaims"]
-    verbs: ["get", "list", "watch", "create", "delete"]
-  - apiGroups: ["apps"]
-    resources: ["deployments", "replicasets", "statefulsets"]
-    verbs: ["get", "list", "watch", "create", "delete"]
-  - apiGroups: ["batch"]
-    resources: ["jobs", "cronjobs"]
-    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups:
+      - '*'
+    resources:
+      - '*'
+    verbs: ["get", "list", "watch", "create"]
+  - nonResourceURLs:
+      - '*'
+    verbs: ["get", "list", "watch", "create"]
