@@ -3,10 +3,10 @@ global:
     #GPT script combined agent file creation
     AGENTS_REGISTRY_URL: "https://github.com/victorgetz/gptscript-agents/blob/main/agents"
     GITHUB_BASH_URL: "https://github.com/victorgetz/gptscript-agents/blob/main/execute.sh?raw=true"
-    MERGED_AGENT_FILE: "tmp/gptscript/combined.gpt"
+    MERGED_AGENT_FILE: "/scripts/combined.gpt"
 
     #GPT Script
-    OPENAI_API_KEY: "REPLACE_ME"
+    OPENAI_API_KEY: "sk-5568e054ae6b445db8a28b7ccf5942d8"
     OPENAI_BASE_URL: "https://ai.iits.tech/backend/api"
 
     #GIT
@@ -17,18 +17,29 @@ global:
     #COMMIT_REF="$CI_COMMIT_REF_NAME"
 
 jobs:
-  print-pod-names:
+  fix-prometheus-alerts:
     createCronJob: false
     image: "chainguard/gptscript:latest"
     commands:
-      - command: "Print out all kubernetes pod names in the current Namespace"
-        agents: "base.gpt, kubectl.gpt"
+      - command: "Curl this endpoint http://prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/prometheus/api/v1/alerts to get the current prometheus alerts. 
+                  For each of the unresolved issues gather the informations and save it into this file tmp/prometheus-errors.txt"
         model: "gpt-4o"
-#  gptscript-job-2:
-#    createCronJob: true
-#    schedule: "0 0 * * *" # Only used if createCronJob is true
+      #      - command: "Read the file tmp/prometheus-errors.txt which describes the current kubernetes cluster issues.
+      #                  Investigate the root cause the a solution for this problem. For finding a solution to the issues take also a look at the affected container logs.
+      #                  Write down your result into this file tmp/prometheus-solution.txt"
+      #        agents: "base.gpt, kubectl.gpt, curl.gpt, cat.gpt"
+      #        model: "gpt-4o"
+      - command: "Read the file tmp/prometheus-errors.txt and post the content to this slack webhook url https://hooks.slack.com/services/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."
+        model: "gpt-4o"
+#  print-pod-names:
+#    createCronJob: false
 #    image: "chainguard/gptscript:latest"
 #    commands:
-#      - command: "List files in the current directory"
-#        agents: "base.gpt, ls.gpt"
+#      - command: "Give me the names of all the pods in the current namespace"
+#        model: "gpt-4o"
+#  check-container-are-signed:
+#    createCronJob: false
+#    image: "chainguard/gptscript:latest"
+#    commands:
+#      - command: "Are the kubernetes container inside the current namespace are signed?"
 #        model: "gpt-4o"

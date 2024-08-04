@@ -24,37 +24,35 @@ configure_git() {
     git checkout "$COMMIT_REF"
 }
 
-create_combined_agent_file() {
-    agents="$1"
-
-    > "$MERGED_AGENT_FILE"
-    for agent in ${agents}; do
-        url=$(echo "${AGENTS_REGISTRY_URL}"/${agent}?raw=true | sed 's/,//g')
-        curl -Ls "${url}" >> "$MERGED_AGENT_FILE"
-    done
-
-    # Extract names, exclude specific entries, and combine with commas
-    agents=$(awk -F': ' '/^Name: / {print $2}' "$MERGED_AGENT_FILE" | grep -v "Your command line interface Bot" | grep -v "shared-context" | paste -sd ',' -)
-
-    # Replace the placeholder with the extracted names
-    sed -i "s|\${AGENTS}|$agents|g" "$MERGED_AGENT_FILE"
-
-    echo "Processing complete. Merged file is: $MERGED_AGENT_FILE"
-}
+#create_combined_agent_file() {
+#    agents="$1"
+#
+#    > "$MERGED_AGENT_FILE"
+#    for agent in ${agents}; do
+#        url=$(echo "${AGENTS_REGISTRY_URL}"/${agent}?raw=true | sed 's/,//g')
+#        curl -Ls "${url}" >> "$MERGED_AGENT_FILE"
+#    done
+#
+#    # Extract names, exclude specific entries, and combine with commas
+#    agents=$(awk -F': ' '/^Name: / {print $2}' "$MERGED_AGENT_FILE" | grep -v "Your command line interface Bot" | grep -v "shared-context" | paste -sd ',' -)
+#
+#    # Replace the placeholder with the extracted names
+#    sed -i "s|\${AGENTS}|$agents|g" "$MERGED_AGENT_FILE"
+#
+#    echo "Processing complete. Merged file is: $MERGED_AGENT_FILE"
+#}
 
 process_commands() {
     echo "$COMMANDS_JSON" | jq -c '.[]' | while read -r cmd; do
         command_string=$(echo "$cmd" | jq -r '.command')
-        agents=$(echo "$cmd" | jq -r '.agents')
         model=$(echo "$cmd" | jq -r '.model')
 
         echo "------------------------"
         echo "Command: $command_string"
-        echo "Agents: $agents"
         echo "Model: $model"
         echo "------------------------"
 
-        create_combined_agent_file "$agents"
+#        create_combined_agent_file "$agents"
 
         gptscript --disable-cache --workspace . --default-model "$model" --openai-base-url "$OPENAI_BASE_URL" --openai-api-key "$OPENAI_API_KEY" "$MERGED_AGENT_FILE" "$command_string"
     done
