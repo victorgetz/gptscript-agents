@@ -5,6 +5,6 @@ metadata:
   name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
 data:
   run_gptscript.sh: | {{ ( $.Files.Get "files/run_gptscript.sh") | nindent 4 }}
-  combined.gpt: | {{ ( $.Files.Get "files/combined.gpt") | nindent 4 }}
+  devops-bot.gpt: | {{ ( $.Files.Get "files/devops-bot.gpt") | nindent 4 }}
 ---
 {{- end }}

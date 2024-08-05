@@ -15,7 +15,7 @@
 #
 #AGENTS_REGISTRY_URL=""
 #
-#MERGED_AGENT_FILE="tmp/gptscript/combined.gpt"
+#MERGED_AGENT_FILE="tmp/gptscript/devops-bot.gpt"
 
 configure_git() {
     git remote set-url origin "$GIT_URL"
