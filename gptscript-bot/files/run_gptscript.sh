@@ -53,3 +53,5 @@ mkdir -p tmp/gptscript
 echo "Will run gptscript against '$OPENAI_BASE_URL'"
 
 process_commands "$COMMANDS"
+
+[[ -f "tmp/error.txt" ]] && exit 1

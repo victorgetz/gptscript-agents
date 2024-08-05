@@ -8,6 +8,7 @@ spec:
   schedule: "{{ $job.schedule }}"
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 450
       template:
         spec:
           serviceAccountName: {{ include "gptscript-bot.fullname" $ }}
@@ -42,6 +43,7 @@ kind: Job
 metadata:
   name: {{ $jobName }}
 spec:
+  activeDeadlineSeconds: 450
   template:
     spec:
       serviceAccountName: {{ include "gptscript-bot.fullname" $ }}
