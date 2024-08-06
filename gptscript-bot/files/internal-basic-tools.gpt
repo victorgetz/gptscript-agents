@@ -1,0 +1,15 @@
+
+---
+Name: internal-basic-tools
+Description: Can perform basic tasks
+Tools: sys.abort, sys.append, sys.download, sys.find, sys.getenv, sys.http.get, sys.http.html2text, sys.http.post, sys.ls, sys.read, sys.remove, sys.stat, sys.time.now, sys.write
+Context: ./shared-context.gpt
+Parameter: task: The cli task which should be executed
+Chat: false
+
+The sys.abort tool is used to halt execution with an error message. 
+sys.append allows appending content to a file, while sys.download facilitates downloading files from a URL to a specified location, with options to overwrite existing files. 
+The sys.find tool traverses directories to find files matching a specific pattern, and sys.getenv retrieves the value of environment variables. 
+The sys.http.get, sys.http.html2text, and sys.http.post tools manage HTTP GET and POST requests, with html2text converting HTML content to plain text. 
+sys.ls lists the contents of a directory, sys.read reads file contents, and sys.remove deletes specified files. 
+sys.stat provides file statistics, sys.time.now returns the current time in RFC3339 format, and sys.write writes content to a specified file.

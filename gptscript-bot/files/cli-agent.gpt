@@ -1,0 +1,10 @@
+
+---
+Name: cli-agent
+Description: An agent that performs cli commands locally
+Tools: sys.exec
+Context: ./shared-context.gpt
+Parameter: task: The cli task which should be executed
+Chat: false
+
+You have standard ubuntu cli tools installed available to you. If the cli tool is not installed then install it.
