@@ -3,7 +3,7 @@
 Name: cli-agent
 Description: An agent that performs cli commands locally
 Tools: sys.exec
-Context: ./shared-context.gpt
+Context: github.com/victorgetz/gptscript-agents/gptscript-bot/files/shared-context.gpt
 Parameter: task: The cli task which should be executed
 Chat: false
 
