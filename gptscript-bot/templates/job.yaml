@@ -8,7 +8,7 @@ spec:
   schedule: "{{ $job.schedule }}"
   jobTemplate:
     spec:
-      activeDeadlineSeconds: 450
+      activeDeadlineSeconds: 600
       template:
         spec:
           serviceAccountName: {{ include "gptscript-bot.fullname" $ }}
@@ -35,7 +35,7 @@ spec:
             - name: script
               configMap:
                 name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
-          restartPolicy: Never
+          restartPolicy: OnFailure
 ---
 {{- else }}
 apiVersion: batch/v1
@@ -43,7 +43,7 @@ kind: Job
 metadata:
   name: {{ $jobName }}
 spec:
-  activeDeadlineSeconds: 450
+  activeDeadlineSeconds: 600
   template:
     spec:
       serviceAccountName: {{ include "gptscript-bot.fullname" $ }}
@@ -70,7 +70,7 @@ spec:
         - name: script
           configMap:
             name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
-      restartPolicy: Never
+      restartPolicy: OnFailure
 ---
 {{- end }}
 {{- end }}

@@ -7,7 +7,7 @@ rules:
       - '*'
     resources:
       - '*'
-    verbs: ["get", "list", "watch", "create"]
+    verbs: ["get", "list", "watch"]
   - nonResourceURLs:
       - '*'
-    verbs: ["get", "list", "watch", "create"]
+    verbs: ["get", "list", "watch"]
