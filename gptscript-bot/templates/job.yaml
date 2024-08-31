@@ -34,7 +34,7 @@ spec:
                 secretName: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
             - name: script
               configMap:
-                name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
+                name: {{ include "gptscript-bot.fullname" $ }}-config
           restartPolicy: OnFailure
 ---
 {{- else }}
@@ -69,7 +69,7 @@ spec:
             secretName: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
         - name: script
           configMap:
-            name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
+            name: {{ include "gptscript-bot.fullname" $ }}-config
       restartPolicy: OnFailure
 ---
 {{- end }}

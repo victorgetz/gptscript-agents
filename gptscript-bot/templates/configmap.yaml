@@ -1,10 +1,8 @@
-{{- range $jobName, $job := .Values.jobs }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-config
+  name: {{ include "gptscript-bot.fullname" $ }}-config
 data:
   run_gptscript.sh: | {{ ( $.Files.Get "files/run_gptscript.sh") | nindent 4 }}
   devops-bot.gpt: | {{ ( $.Files.Get "files/devops-bot.gpt") | nindent 4 }}
----
-{{- end }}
+  kubectl-error-solver.gpt: | {{ ( $.Files.Get "files/kubectl-error-solver.gpt") | nindent 4 }}
