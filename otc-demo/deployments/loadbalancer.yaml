@@ -28,3 +28,4 @@ spec:
     app: my-deployment
   sessionAffinity: None
   type: LoadBalancer
+hello world
