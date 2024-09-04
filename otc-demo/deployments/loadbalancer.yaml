@@ -3,22 +3,11 @@ kind: Service
 metadata:
   annotations:
     service.beta.kubernetes.io/openstack-load-balancer-id: 3675bb11-59bc-4534-b94d-9173d7949a19
-  finalizers:
-  - service.kubernetes.io/load-balancer-cleanup
   name: my-loadbalancer-service
   namespace: wrong-loadbalancer-annotation
 spec:
-  allocateLoadBalancerNodePorts: true
-  clusterIP: 172.17.163.37
-  clusterIPs:
-  - 172.17.163.37
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
-  ipFamilyPolicy: SingleStack
-  loadBalancerSourceRanges:
-  - 0.0.0.0/0
   ports:
   - nodePort: 30678
     port: 8443
