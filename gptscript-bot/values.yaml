@@ -1,10 +1,5 @@
 global:
   env:
-
-    #GPT Script
-
-    ## Can also be url like this: github.com/victorgetz/gptscript-agents/gptscript-bot/files/devops-bot.gpt
-    GPTSCRIPT_BOT_CONFIG: "/scripts/devops-bot.gpt"
     OPENAI_API_KEY: "sk-..."
     OPENAI_BASE_URL: "https://ai.iits.tech/backend/api"
 
@@ -12,49 +7,49 @@ global:
     SLACK_WEBHOOK_URL: "REPLACE_ME"
 
     #GIT
-    #BOT_TOKEN="$GPTSCRIPT_BOT_TOKEN"
-    #GIT_URL="https://$BOT_TOKEN:$BOT_TOKEN@$CI_SERVER_HOST/$CI_PROJECT_PATH.git"
-    #BOT_EMAIL="gptscript-bot@iits-consulting.de"
-    #BOT_NAME="gptscript-bot"
-    #COMMIT_REF="$CI_COMMIT_REF_NAME"
+    GIT_EMAIL: "gptscript-bot@iits-consulting.de"
+    GIT_USERNAME: "gptscript-bot"
+    GIT_URL: "REPLACE_ME"
 
 jobs:
-  fix-pods:
+  fix-my-cluster:
     createCronJob: false
+    #    schedule: "*/10 * * * *"
     image: "iits/gptscript:latest"
     commands:
-      - command: "Go through all namespaces and take a look at the pods if they seem not to run successfully create summary about it and save it in json format into this file tmp/result.json"
-        model: "llm.gpt-4o"
-        botConfig: "/scripts/devops-bot.gpt"
-      - command: "Read the file tmp/result.json which describes which pods are currently failing in the kubernetes cluster then find out how to fix the kubernetes pods and save it in json format into this file tmp/solution.json"
-        model: "llm.gpt-4o"
-        botConfig: "/scripts/kubectl-error-solver.gpt"
-      - command: "Transform the file tmp/solution.json into a valid slack json message and save it to tmp/message.json"
-        model: "llm.gpt-4o"
-        botConfig: "/scripts/devops-bot.gpt"
-      - command: "Post the slack json message tmp/message.json to this slack webhook url $SLACK_WEBHOOK_URL"
-        model: "llm.gpt-4o"
-        botConfig: "/scripts/devops-bot.gpt"
 
-  fix-prometheus-alerts:
-    createCronJob: false
-    image: "iits/gptscript:latest"
-    commands:
-      # Get errors
-      - command: "Curl this endpoint http://prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/prometheus/api/v1/alerts and save it into tmp/prometheus-errors.json"
+      #1. Find Issues
+      - command: "Search inside the current kubernetes cluster (CCE) if you find some issues. The Kubernetes Cluster is hosted on OpenTelekomCloud CCE,
+                  Analyze pods, deployments, statefulsets, pvc, pv and services separately.
+                  If anything looks like it need attention try to find a solution for it and create for each such occurrence a file under tmp/findings as .txt file,
+                  Inside the .txt should be a description about the problem and the possible solution"
         model: "llm.gpt-4o"
-        botConfig: "/scripts/devops-bot.gpt"
-
-      # Investigate
-      - command: "Read the file tmp/prometheus-errors.json which describes current issues in the kubernetes cluster, then find out how to fix them and save it in json format into this file tmp/solution.json"
-        model: "llm.gpt-4o"
+        ## Can also be url like this: github.com/victorgetz/gptscript-agents/gptscript-bot/files/devops-bot.gpt
         botConfig: "/scripts/kubectl-error-solver.gpt"
 
-      # Try to find a solution
-      - command: "Transform the file tmp/solution.json into a valid slack json message and save it to tmp/message.json"
+      # 2. Report issues
+      - command: "Read all of the .txt files from the folder tmp/findings and post the content to this slack webhook url $SLACK_WEBHOOK_URL"
         model: "llm.gpt-4o"
         botConfig: "/scripts/devops-bot.gpt"
 
-      - command: "Post the slack json message tmp/message.json to this slack webhook url $SLACK_WEBHOOK_URL"
+      # 3. Setup Git
+      - command: "Use the git cli first to set global git user.email to $GIT_EMAIL and user.name to $GIT_USERNAME"
+        model: "llm.gpt-4o"
+        botConfig: "/scripts/devops-bot.gpt"
+
+      # 4. Checkout the project
+      - command: "Use the git cli to checkout this project $GIT_URL to /tmp/project"
+        model: "llm.gpt-4o"
+        botConfig: "/scripts/devops-bot.gpt"
+
+      # 5. Perform the fix
+      - command: "Read all files from the folder tmp/findings it describes current problems inside the kubernetes cluster,
+                  inside the folder /tmp/project/otc-demo/deployments you will find the kubernetes manifests which will be deployed to the cluster.
+                  Load all kubernetes manifest yaml files and change the content so that the errors will be solved"
+        model: "llm.gpt-4o"
+        botConfig: "/scripts/devops-bot.gpt"
+
+      # 6. Push to branch
+      - command: "go to the git folder /tmp/project and create a new local branch ai-ops commit and push existing changes to a branch called ai-ops"
         model: "llm.gpt-4o"
         botConfig: "/scripts/devops-bot.gpt"
