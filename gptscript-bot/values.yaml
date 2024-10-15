@@ -24,8 +24,8 @@ jobs:
         botConfig: "/scripts/kubectl-error-solver.gpt"
 
       # 2. Report issues
-      - command: "Read all of the .txt files from the folder tmp/findings and post the content to this slack webhook url $SLACK_WEBHOOK_URL"
-        model: "llm.gpt-4o"
+      - command: "Read all of the .txt files from the folder tmp/findings and post the content to this slack webhook url {{.Values.global.env.SLACK_WEBHOOK_URL}}"
+        model: "gpt-4o-rag"
         botConfig: "/scripts/devops-bot.gpt"
 
       # 3. Setup Git
