@@ -17,7 +17,7 @@ spec:
               image: {{ $job.image }}
               env:
                 - name: COMMANDS_JSON
-                  value: '{{$job.commands | toJson}}'
+                  value: '{{ tpl ($job.commands | toJson) $}}'
               envFrom:
                 - secretRef:
                     name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
@@ -27,14 +27,16 @@ spec:
                   subPath: commands.json
                 - name: script
                   mountPath: /scripts
-              command: ["/bin/sh", "/scripts/run_gptscript.sh"]
+              command: ["/scripts/run_gptscript.sh"]
           volumes:
             - name: commands
               secret:
                 secretName: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
+                defaultMode: 500
             - name: script
               configMap:
                 name: {{ include "gptscript-bot.fullname" $ }}-config
+                defaultMode: 500
           restartPolicy: OnFailure
 ---
 {{- else }}
@@ -52,7 +54,7 @@ spec:
           image: {{ $job.image }}
           env:
             - name: COMMANDS_JSON
-              value: '{{$job.commands | toJson}}'
+              value: '{{ tpl ($job.commands | toJson) $}}'
           envFrom:
             - secretRef:
                 name: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
@@ -62,14 +64,16 @@ spec:
               subPath: commands.json
             - name: script
               mountPath: /scripts
-          command: ["/bin/sh", "/scripts/run_gptscript.sh"]
+          command: ["/scripts/run_gptscript.sh"]
       volumes:
         - name: commands
           secret:
             secretName: {{ include "gptscript-bot.fullname" $ }}-{{ $jobName }}-secret
+            defaultMode: 500
         - name: script
           configMap:
             name: {{ include "gptscript-bot.fullname" $ }}-config
+            defaultMode: 500
       restartPolicy: OnFailure
 ---
 {{- end }}

@@ -1,5 +1,4 @@
-#bin/bash
-
+#!/bin/sh
 
 process_commands() {
     echo "$COMMANDS_JSON" | jq -c '.[]' | while read -r cmd; do
@@ -10,6 +9,7 @@ process_commands() {
         echo "------------------------"
         echo "Command: $command_string"
         echo "Model: $model"
+        echo "Bot Config: $botConfig"
         echo "------------------------"
 
         gptscript --default-model "$model" --workspace "$(dirname "$0")" --disable-cache --openai-base-url "$OPENAI_BASE_URL" --openai-api-key "$OPENAI_API_KEY" "$botConfig" "$command_string"

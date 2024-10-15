@@ -15,15 +15,11 @@ jobs:
   fix-my-cluster:
     createCronJob: false
     #    schedule: "*/10 * * * *"
-    image: "iits/gptscript:latest"
+    image: "iits/gptscript:1.0.2"
     commands:
-
       #1. Find Issues
-      - command: "Search inside the current kubernetes cluster (CCE) if you find some issues. The Kubernetes Cluster is hosted on OpenTelekomCloud CCE,
-                  Analyze pods, deployments, statefulsets, pvc, pv and services separately.
-                  If anything looks like it need attention try to find a solution for it and create for each such occurrence a file under tmp/findings as .txt file,
-                  Inside the .txt should be a description about the problem and the possible solution"
-        model: "llm.gpt-4o"
+      - command: "Search inside the current kubernetes cluster (CCE) if you find some issues. The Kubernetes Cluster is hosted on OpenTelekomCloud CCE,Analyze pods, deployments, statefulsets, pvc, pv and services separately.If anything looks like it need attention try to find a solution for it and create for each such occurrence a file under tmp/findings as .txt file,Inside the .txt should be a description about the problem and the possible solution"
+        model: "gpt-4o-rag"
         ## Can also be url like this: github.com/victorgetz/gptscript-agents/gptscript-bot/files/devops-bot.gpt
         botConfig: "/scripts/kubectl-error-solver.gpt"
 
@@ -33,23 +29,23 @@ jobs:
         botConfig: "/scripts/devops-bot.gpt"
 
       # 3. Setup Git
-      - command: "Use the git cli first to set global git user.email to $GIT_EMAIL and user.name to $GIT_USERNAME"
-        model: "llm.gpt-4o"
+      - command: "Use the git cli first to set global git user.email to {{.Values.global.env.GIT_EMAIL}} and user.name to {{.Values.global.env.GIT_USERNAME}}"
+        model: "gpt-4o-rag"
         botConfig: "/scripts/devops-bot.gpt"
 
       # 4. Checkout the project
-      - command: "Use the git cli to checkout this project $GIT_URL to /tmp/project"
-        model: "llm.gpt-4o"
+      - command: "Use the git cli to checkout this project {{.Values.global.env.GIT_URL}} to /tmp/project"
+        model: "gpt-4o-rag"
         botConfig: "/scripts/devops-bot.gpt"
 
       # 5. Perform the fix
       - command: "Read all files from the folder tmp/findings it describes current problems inside the kubernetes cluster,
                   inside the folder /tmp/project/otc-demo/deployments you will find the kubernetes manifests which will be deployed to the cluster.
                   Load all kubernetes manifest yaml files and change the content so that the errors will be solved"
-        model: "llm.gpt-4o"
+        model: "gpt-4o-rag"
         botConfig: "/scripts/devops-bot.gpt"
 
       # 6. Push to branch
       - command: "go to the git folder /tmp/project and create a new local branch ai-ops commit and push existing changes to a branch called ai-ops"
-        model: "llm.gpt-4o"
+        model: "gpt-4o-rag"
         botConfig: "/scripts/devops-bot.gpt"

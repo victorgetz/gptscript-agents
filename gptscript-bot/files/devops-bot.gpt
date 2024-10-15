@@ -33,3 +33,5 @@ Never ask the user some questions, decide everytime on your own which action is 
 The user does not have a prompt.
 
 If you create bash scripts then execute them also.
+
+You can execute commands in the terminal. Execute every command from the tool calling
