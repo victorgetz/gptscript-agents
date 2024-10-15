@@ -2,17 +2,17 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/openstack-load-balancer-id: 3675bb11-59bc-4534-b94d-9173d7949a19
+    kubernetes.io/elb.id: 3675bb11-59bc-4534-b94d-9173d7949a19
   name: my-loadbalancer-service
   namespace: wrong-loadbalancer-annotation
 spec:
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
   ports:
-  - nodePort: 30678
-    port: 8443
-    protocol: TCP
-    targetPort: 80
+    - nodePort: 30678
+      port: 8443
+      protocol: TCP
+      targetPort: 80
   selector:
     app: my-deployment
   sessionAffinity: None
