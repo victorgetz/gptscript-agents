@@ -1,5 +1,5 @@
 # Usage
-Go to ai.iits.tech and generate a API Key
+Go to the [iits.ai demo site](https://ai.iits.tech) and generate a API Key
 
 ![Selection_872](https://github.com/user-attachments/assets/174ed004-3a24-4f1d-846a-26ca251953cb)
 
